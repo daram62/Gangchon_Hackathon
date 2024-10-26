@@ -1,0 +1,21 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Pretendard 폰트 로컬 임포트 예시 */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/path-to-pretendard-font.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+

@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" },
+  ],
+  "compilerOptions": {
+    /* vite config 파일 경로 별칭 지정*/ 
+    "baseUrl": ".",
+    "paths": {
+      "@components/*":["src/components/*"]
+    }
+  },
+
+}
