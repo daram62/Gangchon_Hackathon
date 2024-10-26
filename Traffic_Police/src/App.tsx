@@ -1,3 +1,5 @@
+// App.tsx
+
 import React, { useState } from 'react';
 import SplashScreen from './components/SplashScreen';
 import CameraContainer from './components/CameraContainer';
@@ -11,32 +13,56 @@ const App: React.FC = () => {
 
   const handleSplashFinish = () => {
     setIsSplashVisible(false);
+    console.log('SplashScreen 종료');
   };
 
   const handleSelectDestination = (destination: string) => {
     setDestination(destination);
     setShowRouteSummary(true);
+    console.log('목적지 선택:', destination);
   };
 
   const handleStartNavigation = () => {
     setShowRouteSummary(false);
+    console.log('내비게이션 시작');
   };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      {isSplashVisible ? (
-        <SplashScreen onFinish={handleSplashFinish} />
-      ) : showRouteSummary && destination ? (
+  const handleExitNavigation = () => {
+    // 내비게이션 종료 시 상태 초기화
+    setDestination(null);
+    console.log('내비게이션 종료');
+  };
+
+  const renderContent = () => {
+    if (isSplashVisible) {
+      return <SplashScreen onFinish={handleSplashFinish} />;
+    }
+  
+    if (showRouteSummary && destination) {
+      return (
         <RouteSummary
           origin="현재 위치"
           destination={destination}
           onStartNavigation={handleStartNavigation}
         />
-      ) : destination ? (
-        <CameraContainer destination={destination} />
-      ) : (
-        <DestinationSearch onSelectDestination={handleSelectDestination} />
-      )}
+      );
+    }
+  
+    if (destination) {
+      return (
+        <CameraContainer
+          destination={destination}
+          onExitNavigation={handleExitNavigation}
+        />
+      );
+    }
+  
+    return <DestinationSearch onSelectDestination={handleSelectDestination} />;
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      {renderContent()}
     </div>
   );
 };

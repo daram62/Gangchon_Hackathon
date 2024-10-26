@@ -8,24 +8,20 @@ const DestinationSearch: React.FC<DestinationSearchProps> = ({ onSelectDestinati
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<string[]>([]);
 
-  // favorites를 상수로 선언
-  const favorites: string[] = [
-    '집',
-    '회사',
-    '즐겨찾는 장소 1',
-    '즐겨찾는 장소 2',
-  ];
+  // 즐겨찾기 목록을 상수로 선언합니다.
+  const favorites: string[] = ['집', '회사', '즐겨찾는 장소 1', '즐겨찾는 장소 2'];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+    const query = e.target.value;
+    setSearchQuery(query);
+
     // 실제 API 호출을 통해 검색 결과를 가져올 수 있습니다.
     // 여기서는 예시로 간단히 필터링된 결과를 사용합니다.
     const mockResults = ['서울역', '강남역', '잠실역', '인천공항'];
-    setResults(
-      mockResults.filter((place) =>
-        place.toLowerCase().includes(e.target.value.toLowerCase())
-      )
+    const filteredResults = mockResults.filter((place) =>
+      place.toLowerCase().includes(query.toLowerCase())
     );
+    setResults(filteredResults);
   };
 
   const handleSelect = (destination: string) => {
@@ -47,23 +43,24 @@ const DestinationSearch: React.FC<DestinationSearchProps> = ({ onSelectDestinati
       />
 
       {/* 검색 결과 */}
-      {searchQuery !== '' && results.length > 0 && (
-        <ul className="w-full max-w-md bg-white border border-gray-200 rounded shadow-md mb-4">
-          {results.map((result, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelect(result)}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-            >
-              {result}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* 검색 결과가 없을 때 */}
-      {searchQuery !== '' && results.length === 0 && (
-        <div className="w-full max-w-md text-gray-500 mb-4">검색 결과가 없습니다.</div>
+      {searchQuery !== '' && (
+        <div className="w-full max-w-md">
+          {results.length > 0 ? (
+            <ul className="bg-white border border-gray-200 rounded shadow-md mb-4">
+              {results.map((result, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSelect(result)}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {result}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-gray-500 mb-4">검색 결과가 없습니다.</div>
+          )}
+        </div>
       )}
 
       {/* 즐겨찾기 */}

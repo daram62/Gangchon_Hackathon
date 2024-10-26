@@ -23,20 +23,24 @@ import stop from '../assets/stop.png';
 import left_dir from '../assets/left_dir.png';
 import right_dir from '../assets/right_dir.png';
 
+interface CameraContainerProps {
+  destination: string;
+  onExitNavigation: () => void;
+}
 
-const CameraContainer: React.FC = () => {
-  const [overlayIndex, setOverlayIndex] = useState(0);
+const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNavigation }) => {
+  const [overlayIndex, setOverlayIndex] = useState<number>(0);
 
-  const handleImageClick = () => {
+  const handleImageClick = (): void => {
     setOverlayIndex((prevIndex) => (prevIndex + 1) % 4);
   };
 
-  const handleOverlayClick = () => {
+  const handleOverlayClick = (): void => {
     setOverlayIndex((prevIndex) => (prevIndex + 1) % 4);
   };
 
-    // 음성 재생 함수
-    const speakText = (text) => {
+  // 음성 재생 함수
+  const speakText = (text) => {
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ko-KR'; // 한국어 설정
@@ -65,6 +69,10 @@ const CameraContainer: React.FC = () => {
     }
   }, [overlayIndex]);
 
+  // 디버깅을 위해 props 값 확인
+  useEffect(() => {
+    console.log('CameraContainer Props:', { destination, onExitNavigation });
+  }, [destination, onExitNavigation]);
 
   return (
     <div className="w-[1280px] h-[832px] pb-[18px] bg-[#818081] rounded-xl flex flex-col items-center">
@@ -168,6 +176,22 @@ const CameraContainer: React.FC = () => {
           )}
         </div>
 
+
+        {/* 목적지 마커 */}
+        <div className="absolute top-[20px] left-[400px] shadow-lg z-10 active:scale-95 w-[154px] h-14 pl-[15px] pr-5 py-[15px] bg-white rounded-[20px] shadow flex items-center gap-[15px]">
+          <div className="w-7 h-7 relative">
+            <div className="absolute w-7 h-7 bg-[#00be9b] opacity-10 rounded-full"></div>
+            <div className="absolute w-3 h-3 bg-[#00be9b] rounded-full left-[8px] top-[8px]"></div>
+          </div>
+          <div className="flex flex-col">
+            <div className="opacity-50 text-black text-xs font-medium font-['Pretendard']">
+              목적지
+            </div>
+            <div className="text-black text-xs font-semibold font-['Pretendard']">
+              {destination}
+            </div>
+          </div>
+        </div>
 
         {/* 출발지 마커 */}
         <div className="absolute top-[20px] left-[400px] shadow-lg z-10 active:scale-95 w-[154px] h-14 pl-[15px] pr-5 py-[15px] bg-white rounded-[20px] shadow flex items-center gap-[15px]">
