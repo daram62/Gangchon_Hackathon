@@ -41,8 +41,8 @@ const App: React.FC = () => {
     if (showRouteSummary && destination) {
       return (
         <RouteSummary
-          origin="현재 위치"
           destination={destination}
+          onBack={() => setShowRouteSummary(false)}
           onStartNavigation={handleStartNavigation}
         />
       );

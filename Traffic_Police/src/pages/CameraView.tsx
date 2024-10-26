@@ -5,7 +5,10 @@ import CameraContainer from '../components/CameraContainer';
 const CameraView: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
-      <CameraContainer />
+      <CameraContainer 
+        destination="someDestination" 
+        onExitNavigation={() => console.log('Exiting navigation')} 
+      />
     </div>
   );
 };

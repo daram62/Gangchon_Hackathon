@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import testVideo from '../assets/test_video.mp4';
-import signal from '../assets/signal1.mp4'
+import video1 from '../assets/real_video.mp4';
+import video2 from '../assets/real_video_2.mp4';
+
 import map from '../assets/map_image.png'
 
 import weather from '../assets/weather.png';
@@ -20,8 +21,9 @@ import front from '../assets/front.png';
 import left from '../assets/left.png';
 
 import stop from '../assets/stop.png';
-import left_dir from '../assets/left_dir.png';
 import right_dir from '../assets/right_dir.png';
+import st_dir from '../assets/st_dir.png';
+
 
 interface CameraContainerProps {
   destination: string;
@@ -30,17 +32,19 @@ interface CameraContainerProps {
 
 const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNavigation }) => {
   const [overlayIndex, setOverlayIndex] = useState<number>(0);
+  const [isVideoOne, setIsVideoOne] = useState<boolean>(true); // 비디오 소스를 교체할 상태 추가
 
   const handleImageClick = (): void => {
-    setOverlayIndex((prevIndex) => (prevIndex + 1) % 4);
+    setOverlayIndex((prevIndex) => (prevIndex + 1) % 6);
   };
 
   const handleOverlayClick = (): void => {
-    setOverlayIndex((prevIndex) => (prevIndex + 1) % 4);
+    setOverlayIndex((prevIndex) => (prevIndex + 1) % 6);
   };
 
+
   // 음성 재생 함수
-  const speakText = (text) => {
+  const speakText = (text: string) => {
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ko-KR'; // 한국어 설정
@@ -55,16 +59,15 @@ const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNa
   useEffect(() => {
     switch (overlayIndex) {
       case 1:
-        speakText('전방정지 신호입니다! 정차하세요.');
-        break;
-      case 2:
-        speakText('좌회전 신호입니다! 경찰관의 지시에 따라 우측에서 좌측으로 이동해주세요.');
+        speakText('전방 직진 신호입니다! 그대로 직진해주세요.');
         break;
       case 3:
+        speakText('좌우측방 동시 정지 신호입니다! 경찰관의 지시에 따라 조심히 정지해주세요.');
+        break;
+      case 5:
         speakText('우회전 신호입니다! 경찰관의 지시에 따라 좌측에서 우측으로 이동해주세요.');
         break;
       default:
-        // 메인 화면에서는 음성 안내 없음
         break;
     }
   }, [overlayIndex]);
@@ -74,15 +77,20 @@ const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNa
     console.log('CameraContainer Props:', { destination, onExitNavigation });
   }, [destination, onExitNavigation]);
 
+  const toggleVideo = () => {
+    setIsVideoOne((prev) => !prev); // 클릭할 때마다 상태 전환
+  };
+
   return (
     <div className="w-[1280px] h-[832px] pb-[18px] bg-[#818081] rounded-xl flex flex-col items-center">
-      {/* 배경 비디오 */}
+      {/* 배경 비디오 - 클릭 시 비디오 소스 전환 */}
       <video
         className="w-[1280px] h-[450px] rounded-2xl object-cover mb-3"
-        src={signal}
+        src={isVideoOne ? video1 : video2} // 상태에 따라 비디오 소스 선택
         autoPlay
         loop
         muted
+        onClick={toggleVideo} // 클릭 시 비디오 전환
       />
 
     <div className="w-[1217px] h-[364px] relative rounded-xl flex flex-col items-start">
@@ -96,76 +104,61 @@ const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNa
             onClick={handleImageClick}
           />
 
-         {/* 오버레이 레이어 */}
-         {overlayIndex !== 0 && (
+   {/* 오버레이 레이어 */}
+   {[1, 3, 5].includes(overlayIndex) && (
             <div
               className={`absolute inset-0 flex items-center justify-center z-50 rounded-[12px] cursor-pointer ${
                 overlayIndex === 1
-                  ? 'bg-[#cc544c]/70'
-                  : overlayIndex === 2
-                  ? 'bg-[#F7CB7F]/70'
-                  : 'bg-[#96B4F4]/70'
+                  ? 'bg-[#96B4F4]/70 animate-blink'
+                  : overlayIndex === 3
+                  ? 'bg-[#cc544c]/70 animate-blink'
+                  : 'bg-[#F7CB7F]/70 animate-blink'
               }`}
               onClick={handleOverlayClick}
             >
               <div className="w-[505px] h-[204px] relative">
-                {/* 배경 */}
                 <div className="w-full h-full absolute bg-[#fff5f3] rounded-[11px]"></div>
 
                 {/* 아이콘과 텍스트 컨테이너 */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  {/* 아이콘 */}
                   {overlayIndex === 1 && (
-                    <img
-                      src={stop}
-                      alt="정지 아이콘"
-                      className="w-[100px] h-[100px] mb-4"
-                    />
-                  )}
-                  {overlayIndex === 2 && (
-                    <img
-                      src={left_dir}
-                      alt="좌회전 아이콘"
-                      className="w-[100px] h-[100px] mb-4"
-                    />
+                    <img src={st_dir} alt="직진 아이콘" className="w-[100px] h-[100px] mb-4" />
                   )}
                   {overlayIndex === 3 && (
-                    <img
-                      src={right_dir}
-                      alt="우회전 아이콘"
-                      className="w-[100px] h-[100px] mb-4"
-                    />
+                    <img src={stop} alt="정지 아이콘" className="w-[100px] h-[100px] mb-4" />
+                  )}
+                  {overlayIndex === 5 && (
+                    <img src={right_dir} alt="우회전 아이콘" className="w-[100px] h-[100px] mb-4" />
                   )}
 
-                  {/* 텍스트 */}
                   <div className="text-center">
                     {overlayIndex === 1 && (
                       <>
                         <p className="text-black text-[28px] font-medium font-['Noto Sans KR'] leading-tight">
-                          전방정지 신호입니다!
+                          전방 직진 신호입니다!
                         </p>
-                        <p className="text-[#c92d23] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
-                          정차하세요
-                        </p>
-                      </>
-                    )}
-                    {overlayIndex === 2 && (
-                      <>
-                        <p className="text-black text-[28px] font-medium font-['Noto Sans KR'] leading-tight">
-                          곧 좌회전입니다!
-                        </p>
-                        <p className="text-[#c9a223] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
-                          주의하세요
+                        <p className="text-[#2377c9] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
+                          그대로 직진해주세요.
                         </p>
                       </>
                     )}
                     {overlayIndex === 3 && (
                       <>
                         <p className="text-black text-[28px] font-medium font-['Noto Sans KR'] leading-tight">
-                          곧 우회전입니다!
+                          좌우측방 동시정지 신호입니다!
                         </p>
-                        <p className="text-[#2377c9] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
-                          주의하세요
+                        <p className="text-[#c92d23] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
+                          정지해주세요.
+                        </p>
+                      </>
+                    )}
+                    {overlayIndex === 5 && (
+                      <>
+                        <p className="text-black text-[28px] font-medium font-['Noto Sans KR'] leading-tight">
+                          우회전 신호입니다!
+                        </p>
+                        <p className="text-[#D78A17] text-[28px] font-black font-['Noto Sans KR'] leading-tight mt-2">
+                          경찰관의 지시에 따라 이동해주세요.
                         </p>
                       </>
                     )}
@@ -175,7 +168,6 @@ const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNa
             </div>
           )}
         </div>
-
 
         {/* 목적지 마커 */}
         <div className="absolute top-[20px] left-[400px] shadow-lg z-10 active:scale-95 w-[154px] h-14 pl-[15px] pr-5 py-[15px] bg-white rounded-[20px] shadow flex items-center gap-[15px]">
@@ -358,6 +350,7 @@ const CameraContainer: React.FC<CameraContainerProps> = ({ destination, onExitNa
             />
           </button>
         </div>
+
       </div>
     </div>
   );

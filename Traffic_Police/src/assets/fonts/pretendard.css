@@ -1,0 +1,16 @@
+/* src/assets/fonts/pretendard.css */
+@font-face {
+    font-family: 'Pretendard';
+    src: url('./Pretendard-Regular.woff2') format('woff2'),
+         url('./Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Pretendard';
+    src: url('./Pretendard-Bold.woff2') format('woff2'),
+         url('./Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
+  /* 필요한 다른 font-weight와 style 추가 */

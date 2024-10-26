@@ -1,13 +1,23 @@
 /* src/index.css */
+
+/* Poppins 웹 폰트 임포트 */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Pretendard 폰트 로컬 임포트 예시 */
+/* Pretendard 폰트 로컬 임포트 */
 @font-face {
   font-family: 'Pretendard';
-  src: url('/path-to-pretendard-font.woff2') format('woff2');
-  font-weight: normal;
+  src: url('./assets/fonts/Pretendard-Regular.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('./assets/fonts/Pretendard-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,3 +29,7 @@ html, body, #root {
   height: 100%;
 }
 
+/* 기본 글꼴 설정 */
+body {
+  font-family: 'Pretendard', sans-serif;
+}
